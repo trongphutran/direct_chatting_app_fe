@@ -1,0 +1,16 @@
+@import "tailwindcss";
+body{
+  background-color: #151515;
+}
+._main{
+  background-color: #080808;
+}
+.conversation{
+  background-color: #141414;
+}
+.chat-bar{
+  background-color: #282828;
+}
+.conversation-list{
+  height : 500px;
+}
