@@ -1,16 +1,17 @@
 @import "tailwindcss";
 body{
-  background-color: #151515;
+  background-color: #f5f5f5;
 }
-._main{
-  background-color: #080808;
-}
-.conversation{
+/* ._main{
+  background-color: #f5f5f5;
+} */
+/* .conversation{
   background-color: #141414;
-}
-.chat-bar{
+} */
+/* .chat-bar{
   background-color: #282828;
-}
+} */
 .conversation-list{
-  height : 500px;
+  
+
 }

@@ -10,10 +10,10 @@ function RightWindow({user_id, sendMessage, chat_history}){
     }, [chat_history, user_id])
 
     return (
-        <div className="w-full flex flex-col h-[70vh]">
+        <div className="w-full flex flex-col h-[70vh] bg-white rounded-2xl border-1 border-gray-200">
             <div className="flex-1 p-4 overflow-y-auto pb-4">
                 {chat_history.map((item) => (
-                    <div key={item.id} className={`text-sm w-fit max-w-lg rounded-xl mb-2 p-2 text-gray-200 ${user_id == item.sender_id ? "bg-green-800 ml-auto text-right" :"bg-gray-700 mr-auto text-left"}`}>{item.text_content}</div>
+                    <div key={item.id} className={`text-sm w-fit max-w-lg rounded-xl mb-2 p-2 ${user_id == item.sender_id ? "bg-green-800 ml-auto text-gray-200 text-right" :"bg-gray-200 mr-auto text-black text-left"}`}>{item.text_content}</div>
                 ))
                 }
                 <div ref={chatEndRef} />

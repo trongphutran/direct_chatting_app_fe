@@ -7,14 +7,20 @@ import { useParams, useNavigate } from "react-router-dom";
 function MainWindow(){
 
     const [user_id, setId] = useState(useParams().id);
+    const [username, setUsername] = useState("")
     const [selected_id, setSelectedId] = useState(0);
     const [chat_history, setChatHistory] = useState([]);
     const [conversations, setConversations] = useState([]);
 
-    const handleSelectId = (select_id) =>{
+    console.log(chat_history)
+
+    const handleSelectId = (select_id, username) =>{
         console.log("selected id: " + select_id)
         setSelectedId(s => select_id)
+        setUsername(username)
     };
+
+    
 
     useEffect(() => {
         var ws = new WebSocket(`ws://localhost:8000/ws/${user_id}`);
@@ -72,11 +78,11 @@ function MainWindow(){
 
 
     return (<>
-        <div className="_main border-2 rounded-2xl" >
-            <Header/>   
-            <div className="flex">
+        <div className="_main rounded-2xl" >
+            <Header username={username} />   
+            <div className="flex gap-0.5">
                 <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}/>
-                ${selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage}/> : null}  
+                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} /> : null}  
             </div>         
         </div>
     </>);
