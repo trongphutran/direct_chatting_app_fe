@@ -11,7 +11,7 @@ function MainWindow(){
     const [selected_id, setSelectedId] = useState(0);
     const [chat_history, setChatHistory] = useState([]);
     const [conversations, setConversations] = useState([]);
-
+    const [searchResults, setSearchResults] = useState([]);
     console.log(chat_history)
 
     const handleSelectId = (select_id, username) =>{
@@ -76,12 +76,34 @@ function MainWindow(){
         }));
     };
 
-
+    
+    const searchUsers = async (query) => {
+        try {
+          const response = await fetch(`http://localhost:8000/users/?query=${encodeURIComponent(query)}`);
+          if (response.ok) {
+            const data = await response.json();
+            setSearchResults(data);
+            console.log("Search results:", data);
+          } else {
+            console.error("Search failed:", response.status);
+          }
+        } catch (error) {
+          console.error("Error during search:", error);
+        }
+      };      
+      const handleSearchQuery = (query) => {
+        console.log("Searching for:", query);
+        if (query === "") {
+          setSearchResults([]);
+        } else {
+          searchUsers(query);
+        }
+      };
     return (<>
         <div className="_main rounded-2xl" >
             <Header username={username} />   
             <div className="flex gap-0.5">
-                <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}/>
+                <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}/>
                 {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} /> : null}  
             </div>         
         </div>
