@@ -3,7 +3,7 @@ import LeftWindow from "../layout_components/LeftWindow";
 import RightWindow from "../layout_components/RightWindow";
 import {useState, useEffect} from 'react'
 import { useParams, useNavigate } from "react-router-dom";
-
+import LeftMenu from "../layout_components/LeftMenu";
 function MainWindow(){
 
     const [user_id, setId] = useState(useParams().id);
@@ -12,6 +12,7 @@ function MainWindow(){
     const [chat_history, setChatHistory] = useState([]);
     const [conversations, setConversations] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
+    const [selectedMenu, setSelectedMenu] = useState("messages");
     console.log(chat_history)
 
     const handleSelectId = (select_id, username) =>{
@@ -100,14 +101,21 @@ function MainWindow(){
         }
       };
     return (<>
-        <div className="_main rounded-2xl" >
+    <div className="flex gap-0.5">
+      <LeftMenu onSelectMenu={setSelectedMenu} />
+      
+        <div className="_main rounded-2xl w-full" >
             <Header username={username} />   
+            
             <div className="flex gap-0.5">
+            
                 <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}/>
                 {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} /> : null}  
             </div>         
         </div>
+        </div>
     </>);
+    
 }
 export default MainWindow;
 

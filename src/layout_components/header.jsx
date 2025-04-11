@@ -13,7 +13,7 @@ const Header = ({username}) => {
                 <div className='m-2.5 text-black'>CHATBOOTH</div>
                 </div>
                 <div>
-                    <img src={placeHolderImg} className='w-16 ml-10 mr-10' alt="" />
+                    {/* <img src={placeHolderImg} className='w-16 ml-10 mr-10' alt="" /> */}
                 </div>
             </div>
             <div className='w-2 border-gray-100'></div>
