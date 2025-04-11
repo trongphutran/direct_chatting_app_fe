@@ -1,19 +1,85 @@
 import Conversation from "../components/conversation";
-import { useState,useEffect } from 'react';
-import { Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search,Users,UserPlus} from 'lucide-react';
 
-function LeftWindow({ onUserSelect, conversations, onSearch, searchResults }) {
+function LeftWindow({
+  onUserSelect,
+  conversations,
+  onSearch,
+  searchResults,
+  selectedMenu
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  useEffect(() => {
-    if (isFirstLoad && conversations.length > 0) {
-        const first = conversations[0];
-        onUserSelect(first.id, first.name);
-        setIsFirstLoad(false)}}, [conversations, isFirstLoad, onUserSelect]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [activeTab, setActiveTab] = useState("friends");
 
+  const handleSelect = (id, name) => {
+    setSelectedId(id);
+    onUserSelect(id, name);
+  };
+
+  useEffect(() => {
+    if (selectedMenu === "messages" && isFirstLoad && conversations.length > 0) {
+      const first = conversations[0];
+      onUserSelect(first.id, first.name);
+      setSelectedId(first.id);
+      setIsFirstLoad(false);
+    }
+  }, [conversations, isFirstLoad, onUserSelect, selectedMenu]);
+
+  
+  const renderConversations = () => {
+    const list = searchTerm === "" ? conversations : searchResults;
+
+    if (searchTerm !== "" && searchResults.length === 0) {
+      return (
+        <div className="text-gray-400 text-center mt-4">
+          Không tìm thấy người dùng nào
+        </div>
+      );
+    }
+
+    return list.map((item) => (
+      <Conversation
+        key={item.id}
+        name={item.name}
+        message_text={item.text_content}
+        id={item.id}
+        onUserSelect={handleSelect}
+        isSelected={selectedId === item.id}
+      />
+    ));
+  };
+
+
+  const renderContacts = () => {
+    return (
+      <>
+      <div className="group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200  mb-4 h-15 hover:bg-gray-100">
+        <div className="flex items-center gap-4 flex-grow">
+          <Users size={28} />
+          <div className="text-center">
+            <div className="font-medium text-base truncate max-w-[160px]">Danh sách bạn bè</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200 h-15 hover:bg-gray-100">
+        <div className="flex items-center gap-4 flex-grow">
+          <UserPlus size={28} />
+          <div className="text-center">
+            <div className="font-medium text-base truncate max-w-[160px]">Lời mời kết bạn</div>
+          </div>
+        </div>
+      </div>
+    </>
+    );
+  };
 
   return (
     <div className="p-4 left-window min-w-[57vh] md:w-0 conversation-list overflow-y-auto bg-white rounded-2xl border border-gray-200">
+      {/* Thanh tìm kiếm */}
       <div className="relative mb-4">
         <input
           type="text"
@@ -30,36 +96,9 @@ function LeftWindow({ onUserSelect, conversations, onSearch, searchResults }) {
           <Search size={18} />
         </div>
       </div>
-      {searchTerm === "" ? (
-        conversations.map((item) => (
-          <Conversation
-            key={item.id}
-            name={item.name}
-            message_text={item.text_content}
-            id={item.id}
-            onUserSelect={onUserSelect}
-          />
-        ))
-      ) : (
-        <>
-          {searchResults.length === 0 ? (
-            <div className="text-gray-400 text-center mt-4">
-              Không tìm thấy người dùng nào
-            </div>
-          ) : (
-            searchResults.map((item) => (
-              <Conversation
-                key={item.id}
-                name={item.name}
-                message_text={""}
-                id={item.id}
-                onUserSelect={onUserSelect}
-              />
-            ))
-          )}
-        </>
-      )}
 
+      
+      {selectedMenu === "messages" ? renderConversations() : renderContacts()}
     </div>
   );
 }

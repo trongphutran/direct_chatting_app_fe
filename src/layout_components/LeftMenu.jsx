@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageCircle, Users } from 'lucide-react';
+import { MessageCircle, Contact } from 'lucide-react';
 import placeHolderImg from '../assets/Ellipse 9.png'
 function LeftMenu({ onSelectMenu }) {
     const [selected, setSelected] = useState('messages');
@@ -14,7 +14,7 @@ function LeftMenu({ onSelectMenu }) {
     };
 
     const baseClass = "w-full text-center py-3 px-4 rounded-xl cursor-pointer";
-    const activeClass = "bg-blue-500 text-white";
+    const activeClass = "bg-blue-300 text-white";
     const inactiveClass = "hover:bg-gray-100 text-gray-800";
 
     return (
@@ -31,7 +31,7 @@ function LeftMenu({ onSelectMenu }) {
                 className={`${baseClass} ${selected === 'contacts' ? activeClass : inactiveClass}`}
                 onClick={() => handleClick('contacts')}
             >
-                <Users size={24} />
+                <Contact size={24}/>
             </button>
         </div>
     );

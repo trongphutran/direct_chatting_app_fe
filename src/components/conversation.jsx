@@ -2,7 +2,7 @@ import imgPlaceHolder from "../assets/Ellipse 8.png";
 import { useState, useEffect, useRef } from "react";
 import { MoreVertical } from "lucide-react";
 
-function Conversation({ id, name, message_text, onUserSelect }) {
+function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef();
 
@@ -23,7 +23,9 @@ function Conversation({ id, name, message_text, onUserSelect }) {
 
   return (
     <div
-      className="group flex justify-between items-center gap-4 p-2 rounded-2xl conversation max-w-96 mt-4 mb-4 cursor-pointer hover:bg-gray-100 transition duration-200"
+  className={`group flex justify-between items-center gap-4 p-2 rounded-2xl conversation max-w-96 mt-4 mb-4 cursor-pointer transition duration-200 ${
+    isSelected ? "bg-blue-300" : "hover:bg-gray-100"
+  }`}
       onClick={() => onUserSelect(id, name)}
       onMouseLeave={() => setShowMenu(false)}
     >
@@ -32,30 +34,35 @@ function Conversation({ id, name, message_text, onUserSelect }) {
         <img
           src={imgPlaceHolder}
           alt="Profile"
-          className="min-w-16 min-h-16 rounded-full"
+          className="w-12 h-12 rounded-full object-cover"
         />
         <div className="text-left">
-          <div className="text-black text-lg">{name}</div>
-          <div className="text-gray-300 text-ellipsis text-nowrap overflow-hidden w-44 text-sm">
-            {message_text}
+          <div className="font-medium text-base truncate max-w-[160px]">
+            {name}
+          </div>
+          <div
+            className={`text-sm truncate max-w-[160px] `}
+          >
+            
           </div>
         </div>
       </div>
 
       {/* Menu Icon + Dropdown */}
-      <div className="relative z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+      <div className="relative z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
         <div onClick={toggleMenu}>
-          <MoreVertical size={20} className="text-gray-500 hover:text-black" />
+          <MoreVertical size={20} className={`${isSelected ? "text-black" : "text-gray-500 hover:text-black"}`} />
         </div>
 
         {showMenu && (
           <div
             ref={menuRef}
-            className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-50"
+            className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-50 text-gray-800"
           >
-            <ul className="text-sm text-gray-700">
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Xem thông tin</li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Xoá cuộc trò chuyện</li>
+            <ul className="text-sm">
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Kết bạn
+              </li>
             </ul>
           </div>
         )}

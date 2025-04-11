@@ -109,7 +109,7 @@ function MainWindow(){
             
             <div className="flex gap-0.5">
             
-                <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}/>
+                <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}  selectedMenu={selectedMenu} selectedId={selected_id}/>
                 {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} /> : null}  
             </div>         
         </div>
