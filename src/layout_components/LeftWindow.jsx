@@ -1,6 +1,6 @@
 import Conversation from "../components/conversation";
 import { useState, useEffect } from 'react';
-import { Search,Users,UserPlus} from 'lucide-react';
+import { Search, Users, UserPlus } from 'lucide-react';
 
 function LeftWindow({
   onUserSelect,
@@ -17,18 +17,30 @@ function LeftWindow({
   const handleSelect = (id, name) => {
     setSelectedId(id);
     onUserSelect(id, name);
+
   };
 
-  useEffect(() => {
-    if (selectedMenu === "messages" && isFirstLoad && conversations.length > 0) {
-      const first = conversations[0];
-      onUserSelect(first.id, first.name);
-      setSelectedId(first.id);
-      setIsFirstLoad(false);
-    }
-  }, [conversations, isFirstLoad, onUserSelect, selectedMenu]);
 
+  useEffect(() => {
+    if (selectedMenu === "messages" && conversations.length > 0) {
+      if (selectedId === "friendsList") {
+        const first = conversations[0];
+        onUserSelect(first.id, first.name);
+        setSelectedId(first.id);
+      }
+    }
   
+    if (selectedMenu === "contacts") {
+      if (selectedId !== "friendsList") {
+        setSelectedId("friendsList");
+        onUserSelect("friendsList");
+      }
+    }
+  }, [selectedMenu, conversations, selectedId, onUserSelect]);
+  
+  
+  
+
   const renderConversations = () => {
     const list = searchTerm === "" ? conversations : searchResults;
 
@@ -52,28 +64,56 @@ function LeftWindow({
     ));
   };
 
-
   const renderContacts = () => {
+    if (searchTerm !== "") {
+      if (searchResults.length === 0) {
+        return (
+          <div className="text-gray-400 text-center mt-4">
+            Không tìm thấy người dùng nào
+          </div>
+        );
+      }
+
+      return searchResults.map((item) => (
+        <Conversation
+          key={item.id}
+          name={item.name}
+          id={item.id}
+          message_text={item.text_content}
+          onUserSelect={handleSelect}
+          isSelected={selectedId === item.id}
+        />
+      ));
+    }
+
+
     return (
       <>
-      <div className="group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200  mb-4 h-15 hover:bg-gray-100">
-        <div className="flex items-center gap-4 flex-grow">
-          <Users size={28} />
-          <div className="text-center">
-            <div className="font-medium text-base truncate max-w-[160px]">Danh sách bạn bè</div>
+        <div
+          className={`group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200 mb-4 h-15
+            ${selectedId === "friendsList" ? "bg-blue-300" : "hover:bg-gray-100"}`}
+          onClick={() => {
+            setSelectedId("friendsList");
+            onUserSelect("friendsList");
+          }}
+        >
+          <div className="flex items-center gap-4 flex-grow">
+            <Users size={28} />
+            <div className="text-center">
+              <div className="font-medium text-base truncate max-w-[160px]">Danh sách bạn bè</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200 h-15 hover:bg-gray-100">
-        <div className="flex items-center gap-4 flex-grow">
-          <UserPlus size={28} />
-          <div className="text-center">
-            <div className="font-medium text-base truncate max-w-[160px]">Lời mời kết bạn</div>
+        <div className="group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200 h-15 hover:bg-gray-100">
+          <div className="flex items-center gap-4 flex-grow">
+            <UserPlus size={28} />
+            <div className="text-center">
+              <div className="font-medium text-base truncate max-w-[160px]">Lời mời kết bạn</div>
+            </div>
           </div>
         </div>
-      </div>
-    </>
+      </>
     );
   };
 
@@ -97,7 +137,6 @@ function LeftWindow({
         </div>
       </div>
 
-      
       {selectedMenu === "messages" ? renderConversations() : renderContacts()}
     </div>
   );

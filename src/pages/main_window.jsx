@@ -15,10 +15,22 @@ function MainWindow(){
     const [selectedMenu, setSelectedMenu] = useState("messages");
     console.log(chat_history)
 
-    const handleSelectId = (select_id, username) =>{
-        console.log("selected id: " + select_id)
-        setSelectedId(s => select_id)
-        setUsername(username)
+    const handleSelectId = (select_id, username) => {
+      if (select_id === "friendsList") {
+        fetch(`http://localhost:8000/contacts/${user_id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            
+            setChatHistory(data);
+            console.log(data);
+            setSelectedId("friendsList");
+            setUsername("Danh sách bạn bè");
+          })}
+       else {
+        console.log("selected id: " + select_id);
+        setSelectedId(select_id);
+        setUsername(username);
+      }
     };
 
     
@@ -44,15 +56,25 @@ function MainWindow(){
     }, [user_id]);
 
     useEffect(() => {
-        fetch(`http://localhost:8000/messages/?user_id_1=${user_id}&user_id_2=${selected_id}`)
-        .then((response) => {
-            console.log("get success")
-            response.json().then((data) => {
-                console.log(data);
-                setChatHistory(data);
-            });
-        });
-    }, [selected_id])
+      if (selected_id === "friendsList") {
+        
+          fetch(`http://localhost:8000/contacts/${user_id}`)
+              .then((res) => res.json())
+              .then((data) => {
+                  setChatHistory(data);  
+                  setSelectedId("friendsList");  
+                  setUsername("Danh sách bạn bè"); 
+              });
+      } else {
+         
+          fetch(`http://localhost:8000/messages/?user_id_1=${user_id}&user_id_2=${selected_id}`)
+              .then((response) => response.json())
+              .then((data) => {
+                  setChatHistory(data);  
+              });
+      }
+  }, [selected_id, user_id]);  
+  
 
     const sendMessage = (e, message) =>{
         e.preventDefault();
@@ -100,6 +122,7 @@ function MainWindow(){
           searchUsers(query);
         }
       };
+      
     return (<>
     <div className="flex gap-0.5">
       <LeftMenu onSelectMenu={setSelectedMenu} />
@@ -110,7 +133,7 @@ function MainWindow(){
             <div className="flex gap-0.5">
             
                 <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}  selectedMenu={selectedMenu} selectedId={selected_id}/>
-                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} /> : null}  
+                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} selected_id={selected_id} onUserSelect={handleSelectId}/> : null}  
             </div>         
         </div>
         </div>

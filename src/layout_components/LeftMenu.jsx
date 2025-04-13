@@ -19,7 +19,7 @@ function LeftMenu({ onSelectMenu }) {
 
     return (
         <div className="min-w-[10vh] p-2 flex flex-col items-center gap-4 bg-white border-r border-gray-200 rounded-2xl">
-              <img src={placeHolderImg} className='w-16 ml-10 mr-10' alt="" />
+              <img src={placeHolderImg} className='w-16' alt="" />
             <button
                 className={`${baseClass} ${selected === 'messages' ? activeClass : inactiveClass}`}
                 onClick={() => handleClick('messages')}
