@@ -25,7 +25,7 @@ function ChatBar({sendMessage}){
                 <div className="flex w-3xl p-3 chat-bar rounded-xl m-4 bottom-0">
                     <input 
                         className="placeholder-gray-400 bg-gray-100 rounded-xl w-full p-2" 
-                        placeholder="Type your text here" 
+                        placeholder="Nhập tin nhắn..." 
                         value={message} 
                         onChange={(e) => handleMessageChange(e)} 
                         onKeyDown={(e) => {if (e.key === "Enter") handleSendMessage(e, message)}}
