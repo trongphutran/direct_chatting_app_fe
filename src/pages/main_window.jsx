@@ -26,10 +26,22 @@ function MainWindow(){
             setSelectedId("friendsList");
             setUsername("Danh sách bạn bè");
           })}
-       else {
+          else{
+            console.log("selected id: " + select_id);
+            setSelectedId(select_id);
+            setUsername(username);
+          
+          }
+       
+        if(select_id === "invitesList"){
+          fetch(`http://localhost:8000/contacts/${user_id}`)
+        setSelectedId(select_id);
+        setUsername(username);
+      } else{
         console.log("selected id: " + select_id);
         setSelectedId(select_id);
         setUsername(username);
+      
       }
     };
 
@@ -65,7 +77,18 @@ function MainWindow(){
                   setSelectedId("friendsList");  
                   setUsername("Danh sách bạn bè"); 
               });
-      } else {
+      } 
+      if (selected_id === "invitesList"){
+        fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
+              .then((res) => res.json())
+              .then((data) => {
+                  setChatHistory(data);  
+                  setSelectedId("invitesList");  
+                  setUsername("Danh sách lời mời kết bạn"); 
+              });
+      }
+      
+       else {
          
           fetch(`http://localhost:8000/messages/?user_id_1=${user_id}&user_id_2=${selected_id}`)
               .then((response) => response.json())

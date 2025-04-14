@@ -17,7 +17,7 @@ function RightWindow({ user_id, sendMessage, chat_history,selected_id,onUserSele
           }))
         : [];
   
-      if (friends.length > 0) {
+      if (selected_id ==="friendsList" && friends.length > 0) {
         return (
           <div className="w-full flex flex-col h-[70vh] bg-white rounded-2xl border border-gray-200 p-4 overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">Danh sách bạn bè</h2>
@@ -43,7 +43,34 @@ function RightWindow({ user_id, sendMessage, chat_history,selected_id,onUserSele
           </div>
         );
       }
-    } else{
+      
+    } 
+      if (selected_id==="invitesList"){
+        const friends = Array.isArray(chat_history)
+        ? chat_history.map((friend) => ({
+            id: friend.id,
+            name: friend.name,
+          }))
+        : [];
+        if (selected_id ==="invitesList" && friends.length > 0) {
+          return(
+        <div className="w-full flex flex-col h-[70vh] bg-white rounded-2xl border border-gray-200 p-4 overflow-y-auto">
+        <h2 className="text-xl font-semibold mb-4">Danh sách lời mới kết bạn</h2>
+        <div className="space-y-2">
+              {friends.map((friend) => (
+                <Conversation
+                  key={friend.id}
+                  id={friend.id}
+                  name={friend.name}
+                  message_text="Bắt đầu trò chuyện"
+                  onUserSelect={onUserSelect}
+                  isSelected={false}
+                />
+              ))}
+            </div>
+      </div>
+      )}}
+      else {
     // Hiển thị khung chat mặc định
 return (
   <div className="w-full flex flex-col h-[70vh] bg-white rounded-2xl border-1 border-gray-200">

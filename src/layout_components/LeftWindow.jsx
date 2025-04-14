@@ -23,20 +23,22 @@ function LeftWindow({
 
   useEffect(() => {
     if (selectedMenu === "messages" && conversations.length > 0) {
-      if (selectedId === "friendsList") {
+      if (selectedId === null || selectedId === "friendsList") {
         const first = conversations[0];
-        onUserSelect(first.id, first.name);
-        setSelectedId(first.id);
+        onUserSelect(first.id, first.name); 
+        setSelectedId(first.id); 
       }
     }
   
     if (selectedMenu === "contacts") {
-      if (selectedId !== "friendsList") {
+      if (selectedId !== "friendsList" && selectedId !== "invitesList") {
         setSelectedId("friendsList");
         onUserSelect("friendsList");
       }
     }
+    
   }, [selectedMenu, conversations, selectedId, onUserSelect]);
+  
   
   
   
@@ -105,7 +107,14 @@ function LeftWindow({
           </div>
         </div>
 
-        <div className="group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200 h-15 hover:bg-gray-100">
+        <div 
+          className={`group flex justify-between items-center gap-4 p-4 rounded-2xl conversation max-w-96 cursor-pointer transition duration-200 h-15 
+            ${selectedId === "invitesList" ? "bg-blue-300" : "hover:bg-gray-100"}`}
+        onClick={() => {
+            setSelectedId("invitesList");
+            onUserSelect("invitesList");
+          }}
+          >
           <div className="flex items-center gap-4 flex-grow">
             <UserPlus size={28} />
             <div className="text-center">
