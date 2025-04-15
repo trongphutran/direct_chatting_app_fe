@@ -146,6 +146,70 @@ function MainWindow(){
         }
       };
       
+      const Unfriend = async (other_user_id) => {
+        try {
+          const response = await fetch(`http://localhost:8000/contacts/?user_id=${user_id}&other_user_id=${other_user_id}`, {
+            method: 'DELETE',
+            headers: {
+              'Accept': 'application/json',
+            },
+          });
+      
+          if (response.ok) {
+            const result = await response.json();
+            console.log("Unfriended:", result);
+            if (selected_id === "friendsList") {
+              fetch(`http://localhost:8000/contacts/?user_id=${user_id}`)
+                .then(res => res.json())
+                .then(data => setChatHistory(data));
+            }
+          } else {
+            console.error("Unfriend failed:", response.status);
+          }
+        } catch (error) {
+          console.error("Error during unfriend:", error);
+        }
+      };
+      
+
+      const AcpFriend = async (contact_user_id) => {
+        const requestData = {
+          user_id: contact_user_id,
+          contact_user_id: user_id
+        };
+      
+        console.log("Request data:", requestData); 
+      
+        try {
+          const response = await fetch(`http://localhost:8000/contacts/`, {
+            method: 'PUT', 
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          });
+      
+          if (response.ok) {
+            const result = await response.json();
+            console.log(result.message);
+      
+            // Reload danh sách lời mời nếu đang ở trang đó
+            if (selected_id === "invitesList") {
+              fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
+                .then(res => res.json())
+                .then(data => setChatHistory(data));
+            }
+          } else {
+            console.error("Lỗi khi đồng ý kết bạn:", response.status);
+          }
+        } catch (error) {
+          console.error("Lỗi khi đồng ý kết bạn:", error);
+        }
+      };
+      
+      
+
     return (<>
     <div className="flex gap-0.5">
       <LeftMenu onSelectMenu={setSelectedMenu} />
@@ -156,7 +220,7 @@ function MainWindow(){
             <div className="flex gap-0.5">
             
                 <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}  selectedMenu={selectedMenu} selectedId={selected_id}/>
-                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} selected_id={selected_id} onUserSelect={handleSelectId}/> : null}  
+                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} selected_id={selected_id} onUserSelect={handleSelectId} Unfriend={Unfriend} AcpFriend={AcpFriend} /> : null}  
             </div>         
         </div>
         </div>

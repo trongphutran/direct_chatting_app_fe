@@ -23,7 +23,7 @@ function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
 
   return (
     <div
-  className={`group flex justify-between items-center gap-4 p-2 rounded-2xl conversation max-w-96 mt-4 mb-4 cursor-pointer transition duration-200 ${
+  className={`group flex justify-between items-center gap-4 p-2 rounded-2xl conversation w-full mt-4 mb-4 cursor-pointer transition duration-200 hover:bg-gray-100 ${
     isSelected ? "bg-blue-300" : "hover:bg-gray-100"
   }`}
       onClick={() => onUserSelect(id, name)}
