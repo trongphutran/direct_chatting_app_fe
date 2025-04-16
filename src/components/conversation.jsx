@@ -2,7 +2,7 @@ import imgPlaceHolder from "../assets/Ellipse 8.png";
 import { useState, useEffect, useRef } from "react";
 import { MoreVertical } from "lucide-react";
 
-function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
+function Conversation({ id, name, message_text, onUserSelect, isSelected, friends = [], user_id, AddFriend, Unfriend }) {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef();
 
@@ -11,6 +11,18 @@ function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
     setShowMenu(!showMenu);
   };
 
+  const isFriend = friends.some((friend) => friend.id === id);
+  useEffect(() => {
+    console.log("friends: ",friends);
+  }, [friends]);
+  const handleMenuClick = () => {
+    if (isFriend) {
+      Unfriend(id);
+    } else {
+      AddFriend(id);
+    }
+    setShowMenu(false);
+  };
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -23,9 +35,9 @@ function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
 
   return (
     <div
-  className={`group flex justify-between items-center gap-4 p-2 rounded-2xl conversation w-full mt-4 mb-4 cursor-pointer transition duration-200 hover:bg-gray-100 ${
-    isSelected ? "bg-blue-300" : "hover:bg-gray-100"
-  }`}
+      className={`group flex justify-between items-center gap-4 p-2 rounded-2xl conversation w-full mt-4 mb-4 cursor-pointer transition duration-200 hover:bg-gray-100 ${
+        isSelected ? "bg-blue-300" : "hover:bg-gray-100"
+      }`}
       onClick={() => onUserSelect(id, name)}
       onMouseLeave={() => setShowMenu(false)}
     >
@@ -40,9 +52,7 @@ function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
           <div className="font-medium text-base truncate max-w-[160px]">
             {name}
           </div>
-          <div
-            className={`text-sm truncate max-w-[160px] `}
-          >
+          <div className={`text-sm truncate max-w-[160px]`}>
             
           </div>
         </div>
@@ -60,8 +70,8 @@ function Conversation({ id, name, message_text, onUserSelect, isSelected }) {
             className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-md z-50 text-gray-800"
           >
             <ul className="text-sm">
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                Kết bạn
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleMenuClick}>
+                {isFriend ? "Hủy kết bạn" : "Kết bạn"}
               </li>
             </ul>
           </div>

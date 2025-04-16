@@ -13,6 +13,8 @@ function MainWindow(){
     const [conversations, setConversations] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [selectedMenu, setSelectedMenu] = useState("messages");
+    const [friends, setFriends] = useState([]);
+
     console.log(chat_history)
 
     const handleSelectId = (select_id, username) => {
@@ -20,7 +22,6 @@ function MainWindow(){
         fetch(`http://localhost:8000/contacts/${user_id}`)
           .then((res) => res.json())
           .then((data) => {
-            
             setChatHistory(data);
             console.log(data);
             setSelectedId("friendsList");
@@ -45,7 +46,18 @@ function MainWindow(){
       }
     };
 
-    
+    useEffect(() => {
+      if (user_id) {
+          fetch(`http://localhost:8000/contacts/${user_id}`)
+              .then((res) => res.json())
+              .then((data) => {
+                  setFriends(data);
+                  console.log("Friends data: ", data);             })
+              .catch((error) => {
+                  console.error("Error fetching friends:", error);
+              });
+      }
+  }, [user_id]); 
 
     useEffect(() => {
         var ws = new WebSocket(`ws://localhost:8000/ws/${user_id}`);
@@ -59,7 +71,7 @@ function MainWindow(){
         .then((response) => {
             console.log("get success")
             response.json().then((data) => {
-                console.log(data);
+                console.log("conversation: ",data);
                 setConversations(data);
             });
         });
@@ -120,7 +132,7 @@ function MainWindow(){
                 console.log(`you send: ${data}`);
                 setChatHistory(c => [...c, data]);
         }));
-    };
+  };
 
     
     const searchUsers = async (query) => {
@@ -194,7 +206,7 @@ function MainWindow(){
             const result = await response.json();
             console.log(result.message);
       
-            // Reload danh sách lời mời nếu đang ở trang đó
+
             if (selected_id === "invitesList") {
               fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
                 .then(res => res.json())
@@ -208,6 +220,34 @@ function MainWindow(){
         }
       };
       
+      const AddFriend = async (contact_user_id) => {
+        const requestData = {
+          user_id: user_id,
+          contact_user_id:contact_user_id
+        };
+      
+        console.log("Request data:", requestData); 
+      
+        try {
+          const response = await fetch(`http://localhost:8000/contacts/`, {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          });
+      
+          if (response.ok) {
+            const result = await response.json();
+            console.log(result.message);
+          } else {
+            console.error("Lỗi khi kết bạn:", response.status);
+          }
+        } catch (error) {
+          console.error("Lỗi khi kết bạn:", error);
+        }
+      };
       
 
     return (<>
@@ -219,7 +259,8 @@ function MainWindow(){
             
             <div className="flex gap-0.5">
             
-                <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}  selectedMenu={selectedMenu} selectedId={selected_id}/>
+                <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}  selectedMenu={selectedMenu} selectedId={selected_id} friends={friends} AddFriend={AddFriend}
+  Unfriend={Unfriend} />
                 {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} selected_id={selected_id} onUserSelect={handleSelectId} Unfriend={Unfriend} AcpFriend={AcpFriend} /> : null}  
             </div>         
         </div>

@@ -7,7 +7,11 @@ function LeftWindow({
   conversations,
   onSearch,
   searchResults,
-  selectedMenu
+  selectedMenu,
+  friends,
+  user_id,
+  AddFriend,
+  Unfriend
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -45,7 +49,6 @@ function LeftWindow({
 
   const renderConversations = () => {
     const list = searchTerm === "" ? conversations : searchResults;
-
     if (searchTerm !== "" && searchResults.length === 0) {
       return (
         <div className="text-gray-400 text-center mt-4">
@@ -58,10 +61,15 @@ function LeftWindow({
       <Conversation
         key={item.id}
         name={item.name}
+        user_id={user_id}
         message_text={item.text_content}
         id={item.id}
+        friends={friends}
         onUserSelect={handleSelect}
         isSelected={selectedId === item.id}
+        AddFriend={AddFriend}
+        Unfriend={Unfriend}
+        
       />
     ));
   };
@@ -81,9 +89,13 @@ function LeftWindow({
           key={item.id}
           name={item.name}
           id={item.id}
+          user_id={user_id}
+          friends={friends}
           message_text={item.text_content}
           onUserSelect={handleSelect}
           isSelected={selectedId === item.id}
+          AddFriend={AddFriend}
+          Unfriend={Unfriend}
         />
       ));
     }
