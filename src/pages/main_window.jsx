@@ -17,34 +17,28 @@ function MainWindow(){
 
     console.log(chat_history)
 
-    const handleSelectId = (select_id, username) => {
-      if (select_id === "friendsList") {
-        fetch(`http://localhost:8000/contacts/${user_id}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setChatHistory(data);
-            console.log(data);
-            setSelectedId("friendsList");
-            setUsername("Danh sách bạn bè");
-          })}
-          else{
-            console.log("selected id: " + select_id);
-            setSelectedId(select_id);
-            setUsername(username);
-          
-          }
-       
-        if(select_id === "invitesList"){
-          fetch(`http://localhost:8000/contacts/${user_id}`)
-        setSelectedId(select_id);
-        setUsername(username);
-      } else{
-        console.log("selected id: " + select_id);
-        setSelectedId(select_id);
-        setUsername(username);
-      
-      }
-    };
+    const handleSelectId = (select_id, username = "") => {
+  if (select_id === "friendsList") {
+    fetch(`http://localhost:8000/contacts/${user_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setChatHistory(data);
+        setUsername("Danh sách bạn bè");
+        setSelectedId("friendsList");
+      });
+  } else if (select_id === "invitesList") {
+    fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
+      .then((res) => res.json())
+      .then((data) => {
+        setChatHistory(data);
+        setUsername("Danh sách lời mời kết bạn");
+        setSelectedId("invitesList");
+      });
+  } else {
+    setSelectedId(select_id);
+    setUsername(username);
+  }
+};
 
     useEffect(() => {
       if (user_id) {
@@ -81,34 +75,26 @@ function MainWindow(){
 
     useEffect(() => {
       if (selected_id === "friendsList") {
-        
-          fetch(`http://localhost:8000/contacts/${user_id}`)
-              .then((res) => res.json())
-              .then((data) => {
-                  setChatHistory(data);  
-                  setSelectedId("friendsList");  
-                  setUsername("Danh sách bạn bè"); 
-              });
-      } 
-      if (selected_id === "invitesList"){
+        fetch(`http://localhost:8000/contacts/${user_id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setChatHistory(data);  
+          });
+      } else if (selected_id === "invitesList") {
         fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
-              .then((res) => res.json())
-              .then((data) => {
-                  setChatHistory(data);  
-                  setSelectedId("invitesList");  
-                  setUsername("Danh sách lời mời kết bạn"); 
-              });
+          .then((res) => res.json())
+          .then((data) => {
+            setChatHistory(data);  
+          });
+      } else {
+        fetch(`http://localhost:8000/messages/?user_id_1=${user_id}&user_id_2=${selected_id}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setChatHistory(data);  
+          });
       }
-      
-       else {
-         
-          fetch(`http://localhost:8000/messages/?user_id_1=${user_id}&user_id_2=${selected_id}`)
-              .then((response) => response.json())
-              .then((data) => {
-                  setChatHistory(data);  
-              });
-      }
-  }, [selected_id, user_id]);  
+    }, [selected_id, user_id]);
+    
   
 
     const sendMessage = (e, message) =>{
@@ -261,7 +247,7 @@ function MainWindow(){
             
                 <LeftWindow user_id={user_id} conversations={conversations} onUserSelect={handleSelectId}  onSearch={handleSearchQuery} searchResults={searchResults}  selectedMenu={selectedMenu} selectedId={selected_id} friends={friends} AddFriend={AddFriend}
   Unfriend={Unfriend} />
-                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} selected_id={selected_id} onUserSelect={handleSelectId} Unfriend={Unfriend} AcpFriend={AcpFriend} /> : null}  
+                {selected_id!=0 ? <RightWindow chat_history={chat_history} user_id={user_id} sendMessage={sendMessage} selected_id={selected_id} onUserSelect={handleSelectId} Unfriend={Unfriend} AcpFriend={AcpFriend} friends={friends} AddFriend={AddFriend} username={username} /> : null}  
             </div>         
         </div>
         </div>
