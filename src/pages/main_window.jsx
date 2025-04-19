@@ -241,7 +241,7 @@ function MainWindow(){
       <LeftMenu onSelectMenu={setSelectedMenu} />
       
         <div className="_main rounded-2xl w-full" >
-            <Header username={username} />   
+            <Header username={username} selectedMenu={selectedMenu} selectedId={selected_id}/>   
             
             <div className="flex gap-0.5">
             
