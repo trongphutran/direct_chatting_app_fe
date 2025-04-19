@@ -21,27 +21,26 @@ function LeftWindow({
   const handleSelect = (id, name) => {
     setSelectedId(id);
     onUserSelect(id, name);
-
   };
 
 
   useEffect(() => {
     if (selectedMenu === "messages" && conversations.length > 0) {
-      if (selectedId === null || selectedId === "friendsList") {
+      if (selectedId === null || selectedId === "friendsList" || selectedId === "invitesList") {
         const first = conversations[0];
-        onUserSelect(first.id, first.name); 
-        setSelectedId(first.id); 
+        setSelectedId(first.id);
+        onUserSelect(first.id, first.name);
       }
     }
   
     if (selectedMenu === "contacts") {
-      if (selectedId !== "friendsList" && selectedId !== "invitesList") {
+      if (selectedId != null) {
         setSelectedId("friendsList");
         onUserSelect("friendsList");
       }
     }
     
-  }, [selectedMenu, conversations, selectedId, onUserSelect]);
+  }, [selectedMenu,conversations]);
   
   
   
