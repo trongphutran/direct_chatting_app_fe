@@ -17,9 +17,9 @@ function MainWindow(){
 
     console.log(chat_history)
 
-    const handleSelectId = (select_id, username = "") => {
+    const handleSelectId = ( select_id, username = "") => {
   if (select_id === "friendsList") {
-    fetch(`http://localhost:8000/contacts/${user_id}`)
+    fetch(`http://localhost:8000/contacts/?user_id=${user_id}`)
       .then((res) => res.json())
       .then((data) => {
         setChatHistory(data);
@@ -27,7 +27,7 @@ function MainWindow(){
         setSelectedId("friendsList");
       });
   } else if (select_id === "invitesList") {
-    fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
+    fetch(`http://localhost:8000/contacts/pending_requests?user_id=${user_id}`)
       .then((res) => res.json())
       .then((data) => {
         setChatHistory(data);
@@ -42,7 +42,7 @@ function MainWindow(){
 
     useEffect(() => {
       if (user_id) {
-          fetch(`http://localhost:8000/contacts/${user_id}`)
+          fetch(`http://localhost:8000/contacts/?user_id=${user_id}`)
               .then((res) => res.json())
               .then((data) => {
                   setFriends(data);
@@ -51,7 +51,7 @@ function MainWindow(){
                   console.error("Error fetching friends:", error);
               });
       }
-  }, [user_id]); 
+    }, [user_id]); 
 
     useEffect(() => {
         var ws = new WebSocket(`ws://localhost:8000/ws/${user_id}`);
@@ -75,13 +75,13 @@ function MainWindow(){
 
     useEffect(() => {
       if (selected_id === "friendsList") {
-        fetch(`http://localhost:8000/contacts/${user_id}`)
+        fetch(`http://localhost:8000/contacts/?user_id=${user_id}`)
           .then((res) => res.json())
           .then((data) => {
             setChatHistory(data);  
           });
       } else if (selected_id === "invitesList") {
-        fetch(`http://localhost:8000/contacts/${user_id}/pending_requests`)
+        fetch(`http://localhost:8000/contacts/pending_requests?user_id=${user_id}`)
           .then((res) => res.json())
           .then((data) => {
             setChatHistory(data);  
