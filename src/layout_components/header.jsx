@@ -1,7 +1,14 @@
 import placeHolderImg from '../assets/Ellipse 9.png'
 import placeHolderImg2 from '../assets/Ellipse 8.png' 
 
-const Header = ({username}) => {
+
+
+const Header = ({username,selectedMenu,selectedId}) => {
+
+    const shouldShowHeaderInfo = !(
+        selectedMenu === "contacts" &&
+        (selectedId === "friendsList" || selectedId === "invitesList")
+      );
     return (
         <div className='header flex border-1 border-gray-300 rounded-2xl bg-white'>
             <div className='flex flex-row min-w-96 justify-between mt-4 mb-4 ml-8 bg-white border-r-1 border-gray-200'>
@@ -13,19 +20,21 @@ const Header = ({username}) => {
                 <div className='m-2.5 text-black'>CHATBOOTH</div>
                 </div>
                 <div>
-                    <img src={placeHolderImg} className='w-16 ml-10 mr-10' alt="" />
+                    {/* <img src={placeHolderImg} className='w-16 ml-10 mr-10' alt="" /> */}
                 </div>
             </div>
-            <div className='w-2 border-gray-100'></div>
-            <div className='flex items-center ml-14 mt-4 mb-4'>
-                <div className={`${username ? "block" : "hidden" }`}>
-                    <img src={placeHolderImg2} alt="image" />
-                </div>
-                <div className='text-left ml-2.5'>
-                    <div className={`${username ? "text-black" : "hidden" }`}>{username}</div>
-                    <div className={`${username ? "text-gray-500" : "hidden" }`}>Online</div>
-                </div>
-            </div>
+            {shouldShowHeaderInfo && (
+                <><div className='w-2 border-gray-100'></div><div className='flex items-center ml-14 mt-4 mb-4'>
+                    <div className={`${username ? "block" : "hidden"}`}>
+                        <img src={placeHolderImg2} alt="image" />
+                    </div>
+                    <div className='text-left ml-2.5'>
+                        <div className={`${username ? "text-black" : "hidden"}`}>{username}</div>
+                        <div className={`${username ? "text-gray-500" : "hidden"}`}>Online</div>
+                    </div>
+                </div></>
+)}
+            
         </div>
     );
 }
